@@ -16,10 +16,10 @@
 static volatile bool estado_led = false;
 
 void alarm_irq_handler(void) {
-    hw_clear_bits(&timer_hw->intr, 1u << ALARM_NUM);                // Limpa a flag no hardware para não travar a CPU
-    estado_led = !estado_led;                                       // Inverte a variável lógica do estado
-    gpio_put(LED_PIN, estado_led);                                  // Atualiza o pino físico com o novo estado
-    timer_hw->alarm[ALARM_NUM] = timer_hw->timerawl + INTERVALO_US; // Reagenda o próximo disparo somando 1s ao tempo atual
+    // [TODO] Implementar a lógica da ISR aqui:
+    // 1. Limpar a flag de interrupção no hardware para não travar a CPU
+    // 2. Inverter a variável lógica do estado e atualizar o pino do LED
+    // 3. Reagendar o próximo disparo do alarme (tempo atual + INTERVALO_US)
 }
 
 int main() {
@@ -28,11 +28,12 @@ int main() {
     gpio_set_dir(LED_PIN, GPIO_OUT);                                // Define a direção elétrica do pino como saída
 
     // Configura e arma o alarme
-    hw_set_bits(&timer_hw->inte, 1u << ALARM_NUM);                  // Autoriza o módulo TIMER a gerar sinal elétrico de IRQ
-    uint alarm_irq = timer_hardware_alarm_get_irq_num(timer_hw, ALARM_NUM);
-    irq_set_exclusive_handler(alarm_irq, alarm_irq_handler);        // Registra a nossa função na tabela do processador (NVIC)
-    irq_set_enabled(alarm_irq, true);                               // "Abre os ouvidos" do processador para esta linha de IRQ
-    timer_hw->alarm[ALARM_NUM] = timer_hw->timerawl + INTERVALO_US; // Disparo inicial: lê o tempo exato agora e soma 1s
+    // [TODO] Adicionar as instruções para:
+    // 1. Autorizar o módulo TIMER a gerar sinal de interrupção
+    // 2. Obter o número da IRQ associado ao ALARM_NUM
+    // 3. Registrar a função de handler (alarm_irq_handler)
+    // 4. Habilitar a interrupção no processador
+    // 5. Definir o disparo inicial do alarme
 
     while (1) {
         printf("Loop principal livre para outras tarefas...\n");
